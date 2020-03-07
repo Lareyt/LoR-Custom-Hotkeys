@@ -15,7 +15,7 @@ SetDefaults()
 {
 	global
 
-	blnAlwaysGrabData := True ; Set this to true to allow changing the resolution / window size without restarting the script, costs some peformance though
+	blnAlwaysGrabData := True ; Set this to true to allow changing the resolution / window size without restarting the script, has a very minor performance impact though
 
 	blnOraclesEyeActive := False
 	blnLoRWindowDataGrabbed := False

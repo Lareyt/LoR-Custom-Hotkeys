@@ -45,11 +45,11 @@ $Tab::
 $MButton::
 $XButton1::
 $XButton2::
-	If (blnAlwaysGrabData Or Not blnLoRWindowDataGrabbed)
-		Gosub GrabLoRWindowData
-	
 	If Not blnOraclesEyeActive
 	{
+		If (blnAlwaysGrabData Or Not blnLoRWindowDataGrabbed)
+			Gosub GrabLoRWindowData
+
 		MouseGetPos, intUserMouseXPos, intUserMouseYPos
 		
 		MouseMove, intOraclesEyeXPos, intOraclesEyeYPos

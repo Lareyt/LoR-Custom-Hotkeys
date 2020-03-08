@@ -6,9 +6,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #InstallMouseHook
 #SingleInstance, Force
 
-SetDefaults()
 CoordMode, Mouse, Client
 SetDefaultMouseSpeed, 0
+SetDefaults()
 Return
 
 SetDefaults()

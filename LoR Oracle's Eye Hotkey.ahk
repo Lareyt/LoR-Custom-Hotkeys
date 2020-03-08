@@ -86,9 +86,7 @@ GrabLoRWindowData:
 		blnLoRWindowDataGrabbed := True
 	}
 	Else
-	{
 		blnLoRWindowDataGrabbed := False
-	}
 Return
 
 GetClientSize(strWindowTitle, ByRef intWindowWidth := "", ByRef intWindowHeight := "")

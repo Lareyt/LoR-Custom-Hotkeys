@@ -89,10 +89,10 @@ GrabLoRWindowData:
 		blnLoRWindowDataGrabbed := False
 Return
 
-GetClientSize(strWindowTitle, ByRef intWindowWidth := "", ByRef intWindowHeight := "")
+GetClientSize(hexHWND, ByRef intWindowWidth := 0, ByRef intWindowHeight := 0)
 {
 	VarSetCapacity(rect, 16)
-	DllCall("GetClientRect", "ptr", strWindowTitle, "ptr", &rect)
+	DllCall("GetClientRect", "ptr", hexHWND, "ptr", &rect)
 	intWindowWidth := NumGet(rect, 8, "int")
 	intWindowHeight := NumGet(rect, 12, "int")
 }

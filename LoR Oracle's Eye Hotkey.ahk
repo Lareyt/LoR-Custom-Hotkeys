@@ -72,9 +72,9 @@ $XButton2 Up::
 Return
 
 GrabLoRWindowData:
-	If WinActive("ahk_exe LoR.exe")
+	If WinActive(ahk_exe LoR.exe)
 	{
-		GetClientSize(WinExist(ahk_exe LoR.exe), intLoRWindowWidth, intLoRWindowHeight)
+		GetClientSize(WinActive(ahk_exe LoR.exe), intLoRWindowWidth, intLoRWindowHeight)
 
 		fltLoRWindowAspectRatio := intLoRWindowHeight / intLoRWindowWidth
 		intOraclesEyeXPos := Round(intLoRWindowHeight / Max(fltOraclesEyeMaxAspectRatioScalar, fltLoRWindowAspectRatio) * fltOraclesEyeXPosBaseScalar + Max(0, (intLoRWindowWidth - intLoRWindowHeight / fltOraclesEyeMaxAspectRatioScalar) * fltOraclesEyeXPixelScalar))

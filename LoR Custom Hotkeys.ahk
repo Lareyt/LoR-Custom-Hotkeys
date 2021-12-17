@@ -101,7 +101,7 @@ $MButton Up::
 Return
 
 $XButton1::Send {Space}
-$XButton2::Send A
+$XButton2::Send a
 
 #IfWinActive
 !+^r::

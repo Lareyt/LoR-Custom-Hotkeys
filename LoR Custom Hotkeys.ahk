@@ -16,8 +16,9 @@ SetDefaults()
 	global
 
 	blnAlwaysGrabData := True ; Set this to true to allow changing the resolution / window size without restarting the script, has a very minor performance impact though
+	blnResetMouseAfterUserMove := False ; Set this to true to always reset the mouse position even after it has been significantly moved
 
-	blnOraclesEyeActive := False
+	blnOraclesEyeHotkeyTriggered := False
 	blnLoRWindowDataGrabbed := False
 
 	intPause := 30
@@ -36,6 +37,11 @@ SetDefaults()
 	intUserMouseXPos := 0
 	intUserMouseYPos := 0
 
+	blnMouseMoveByUser := False
+	intTempUserMouseXPos := 0
+	intTempUserMouseYPos := 0
+	intMousePosResetAllowance := 10
+
 	intResetPosXPos := 0
 	intResetPosYPos := 0
 
@@ -46,20 +52,16 @@ GrabLoRWindowData:
 	If WinActive(ahk_exe LoR.exe)
 	{
 		GetClientSize(WinActive(ahk_exe LoR.exe), intLoRWindowWidth, intLoRWindowHeight)
-
-		fltLoRWindowAspectRatio := intLoRWindowHeight / intLoRWindowWidth
 		
-		If (blnOraclesEyeActive = True Or blnLoRWindowDataGrabbed = False)
+		If (blnOraclesEyeHotkeyTriggered Or Not blnLoRWindowDataGrabbed)
 		{
+			fltLoRWindowAspectRatio := intLoRWindowHeight / intLoRWindowWidth
 			intOraclesEyeXPos := Round(intLoRWindowHeight / Max(fltOraclesEyeMaxAspectRatioScalar, fltLoRWindowAspectRatio) * fltOraclesEyeXPosBaseScalar + Max(0, (intLoRWindowWidth - intLoRWindowHeight / fltOraclesEyeMaxAspectRatioScalar) * fltOraclesEyeXPixelScalar))
 			intOraclesEyeYPos := Round(intLoRWindowHeight / 2)
 
 			intResetPosXPos := Round(intLoRWindowWidth / 2)
 			intResetPosYPos := intOraclesEyeYPos
-		}
-		Else If (blnOraclesEyeActive = False Or blnLoRWindowDataGrabbed = False)
-		{
-
+			
 		}
 
 		blnLoRWindowDataGrabbed := True
@@ -79,9 +81,9 @@ GetClientSize(hexHWND, ByRef intWindowWidth := 0, ByRef intWindowHeight := 0)
 #IfWinActive, ahk_exe LoR.exe
 $Tab::
 $MButton::
-	If Not blnOraclesEyeActive
+	If Not blnOraclesEyeHotkeyTriggered
 	{
-		blnOraclesEyeActive := True
+		blnOraclesEyeHotkeyTriggered := True
 		If (blnAlwaysGrabData Or Not blnLoRWindowDataGrabbed)
 			Gosub GrabLoRWindowData
 		MouseGetPos, intUserMouseXPos, intUserMouseYPos
@@ -91,13 +93,22 @@ Return
 
 $Tab Up::
 $MButton Up::
-	If (intUserMouseXPos < 0 Or intUserMouseXPos > intLoRWindowWidth Or intUserMouseYPos < 0 Or intUserMouseYPos > intLoRWindowHeight)
+	If blnOraclesEyeHotkeyTriggered
 	{
-		MouseMove, intResetPosXPos, intResetPosYPos
-		Sleep, intPause
+		blnOraclesEyeHotkeyTriggered := False
+		MouseGetPos, intTempUserMouseXPos, intTempUserMouseYPos
+		blnMouseMoveByUser := intTempUserMouseXPos - intMousePosResetAllowance > intOraclesEyeXPos Or intTempUserMouseXPos + intMousePosResetAllowance < intOraclesEyeXPos Or intTempUserMouseYPos - intMousePosResetAllowance > intOraclesEyeYPos Or intTempUserMouseYPos + intMousePosResetAllowance < intOraclesEyeYPos
+		
+		If (blnResetMouseAfterUserMove Or Not blnMouseMoveByUser)
+		{
+			If (intUserMouseXPos < 0 Or intUserMouseXPos > intLoRWindowWidth Or intUserMouseYPos < 0 Or intUserMouseYPos > intLoRWindowHeight)
+			{
+				MouseMove, intResetPosXPos, intResetPosYPos
+				Sleep, intPause
+			}
+			MouseMove, intUserMouseXPos, intUserMouseYPos
+		}
 	}
-	MouseMove, intUserMouseXPos, intUserMouseYPos
-	blnOraclesEyeActive := False
 Return
 
 $XButton1::Send {Space}
